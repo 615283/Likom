@@ -1,0 +1,116 @@
+package com.georlegacy.general.likom;
+
+import com.georlegacy.general.likom.util.FontUtil;
+import com.jidesoft.swing.MultilineLabel;
+import org.brunocvcunha.instagram4j.Instagram4j;
+import org.brunocvcunha.instagram4j.requests.InstagramLoginRequest;
+import org.brunocvcunha.instagram4j.requests.payload.InstagramLoginResult;
+
+import javax.swing.*;
+import javax.swing.border.Border;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.geom.Line2D;
+import java.io.IOException;
+import java.net.URISyntaxException;
+
+public class GUI extends JFrame {
+
+    JPanel main;
+
+    public GUI() throws URISyntaxException {
+        this.setResizable(false);
+        this.setSize(new Dimension(800, 600));
+        this.setBackground(new Color(20, 139, 251));
+        this.setFont(FontUtil.getFont(App.class.getClassLoader().getResourceAsStream("myriadfont.ttf"), 24));
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setLayout(new FlowLayout());
+        this.setTitle("Likom - Instagram Comment and Like Utility");
+        main = new JPanel();
+        main.setBorder(BorderFactory.createEmptyBorder(50, 75, 50, 75));
+        this.add(main);
+    }
+
+    public void displayOnly(String text, Color color) {
+        main.removeAll();
+        JPanel panel = new JPanel();
+        panel.setBackground(this.getBackground());
+
+        JLabel label = new JLabel(text, SwingConstants.CENTER);
+        label.setForeground(color);
+        label.setFont(this.getFont());
+        label.setPreferredSize(new Dimension(600, 400));
+
+        panel.add(label);
+        main.setFont(FontUtil.getFont(App.class.getClassLoader().getResourceAsStream("myriadfont.ttf"), 52));
+        main.add(panel, BorderLayout.CENTER);
+        this.setVisible(true);
+    }
+
+    public void displayLogon() {
+        Border padding = BorderFactory.createEmptyBorder(15, 25, 30, 25);
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 15));
+        panel.setBackground(new Color(119, 196, 251));
+        panel.setPreferredSize(new Dimension(300, 300));
+        panel.setBorder(padding);
+
+        JLabel header = new JLabel("Sign in to Instagram below", SwingConstants.CENTER);
+        header.setFont(this.getFont());
+        header.setBorder(BorderFactory.createEmptyBorder(10,0,15,0));
+
+        JTextField username = new JTextField();
+        username.setText("Username");
+        username.setPreferredSize(new Dimension(175, 30));
+        username.setFont(this.getFont().deriveFont(16f));
+
+        JTextField password = new JTextField();
+        password.setText("Password");
+        password.setPreferredSize(new Dimension(175, 30));
+        password.setFont(this.getFont().deriveFont(16f));
+
+        JButton login = new JButton("Sign in");
+        login.setFocusPainted(false);
+        login.setForeground(Color.BLACK);
+        login.setFont(this.getFont().deriveFont(24f));
+        login.setPreferredSize(new Dimension(100, 40));
+        login.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+        login.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                final String user = username.getText();
+                final String pw = password.getText();
+
+                JOptionPane.showMessageDialog(null, "Please be patient, logging in may take some time...", "Status", JOptionPane.INFORMATION_MESSAGE);
+                Likom.getInstance().setInstagram(Instagram4j.builder().username(user).password(pw).build());
+                Likom.getInstance().getInstagram().setup();
+                InstagramLoginResult result;
+                try {
+                    result = Likom.getInstance().getInstagram().login();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+                if (result.getStatus().equalsIgnoreCase("fail")) {
+                    System.out.println("fail");
+                    username.setText("Username");
+                    password.setText("Password");
+                    JOptionPane.showMessageDialog(null, result.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
+                displayMain();
+            }
+        });
+
+        panel.add(header);
+        panel.add(username);
+        panel.add(password);
+        panel.add(login);
+
+        main.add(panel, BorderLayout.CENTER);
+        this.setVisible(true);
+    }
+
+    public void displayMain() {
+        //TODO display menu
+    }
+
+}
