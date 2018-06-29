@@ -1,17 +1,16 @@
 package com.georlegacy.general.likom;
 
+import com.georlegacy.general.likom.modules.base.ModuleHandler;
 import com.georlegacy.general.likom.util.FontUtil;
-import com.jidesoft.swing.MultilineLabel;
 import org.brunocvcunha.instagram4j.Instagram4j;
-import org.brunocvcunha.instagram4j.requests.InstagramLoginRequest;
 import org.brunocvcunha.instagram4j.requests.payload.InstagramLoginResult;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.geom.Line2D;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
@@ -22,13 +21,19 @@ public class GUI extends JFrame {
     public GUI() throws URISyntaxException {
         this.setResizable(false);
         this.setSize(new Dimension(800, 600));
-        this.setBackground(new Color(20, 139, 251));
         this.setFont(FontUtil.getFont(App.class.getClassLoader().getResourceAsStream("myriadfont.ttf"), 24));
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLayout(new FlowLayout());
         this.setTitle("Likom - Instagram Comment and Like Utility");
+        try {
+            this.setIconImage(ImageIO.read(Likom.class.getClassLoader().getResourceAsStream("icon.png")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         main = new JPanel();
+        main.setPreferredSize(this.getSize());
         main.setBorder(BorderFactory.createEmptyBorder(50, 75, 50, 75));
+        main.setBackground(new Color(20, 139, 251));
         this.add(main);
     }
 
@@ -95,8 +100,8 @@ public class GUI extends JFrame {
                     username.setText("Username");
                     password.setText("Password");
                     JOptionPane.showMessageDialog(null, result.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                }
-                displayMain();
+                } else
+                    displayMain();
             }
         });
 
@@ -110,7 +115,51 @@ public class GUI extends JFrame {
     }
 
     public void displayMain() {
-        //TODO display menu
+        this.remove(main);
+        this.setSize(new Dimension(300, 500));
+
+        JPanel modules = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 32));
+        modules.setPreferredSize(new Dimension(300, 500));
+        modules.setBorder(BorderFactory.createEmptyBorder(40,20,40,20));
+        modules.setBackground(new Color(20, 139, 251));
+
+        ModuleHandler handler = new ModuleHandler();
+
+        JButton system = createModuleButton("System");
+        system.addActionListener(handler.getByName(system.getText()));
+
+        JButton hashtags = createModuleButton("HashTags");
+        hashtags.addActionListener(handler.getByName(hashtags.getText()));
+
+        JButton interval = createModuleButton("Interval");
+        interval.addActionListener(handler.getByName(interval.getText()));
+
+        JButton blacklistusers = createModuleButton("BlacklistUsers");
+        blacklistusers.addActionListener(handler.getByName(blacklistusers.getText()));
+
+        JButton comments = createModuleButton("Comments");
+        comments.addActionListener(handler.getByName(comments.getText()));
+
+        modules.add(system);
+        modules.add(hashtags);
+        modules.add(interval);
+        modules.add(blacklistusers);
+        modules.add(comments);
+
+        this.add(modules);
+        this.setVisible(true);
+    }
+
+    private JButton createModuleButton(String name) {
+        JButton button = new JButton();
+        button.setText(name);
+        button.setBackground(Color.WHITE);
+        button.setForeground(Color.BLACK);
+        button.setFocusPainted(false);
+        button.setFont(this.getFont().deriveFont(18f));
+        button.setPreferredSize(new Dimension(200, 30));
+
+        return button;
     }
 
 }

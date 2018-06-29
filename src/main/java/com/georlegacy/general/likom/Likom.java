@@ -40,7 +40,7 @@ public class Likom {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            System.exit(1);
+            System.exit(0);
         }
         gui.displayLogon();
     }

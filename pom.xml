@@ -22,6 +22,7 @@
                 <filtering>true</filtering>
                 <directory>${basedir}/src/main/resources/</directory>
                 <includes>
+                    <include>icon.png</include>
                     <include>myriadfont.ttf</include>
                 </includes>
             </resource>
