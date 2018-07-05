@@ -73,7 +73,8 @@ public class GUI extends JFrame {
         panel.setPreferredSize(new Dimension(320, 300));
         panel.setBorder(padding);
 
-        JLabel header = new JLabel("Sign in to Instagram below", SwingConstants.CENTER);
+        JLabel header = new JLabel();
+        header.setText("Sign in to Instagram below");
         header.setFont(this.getFont());
         header.setBorder(BorderFactory.createEmptyBorder(10, 0, 15, 0));
 
@@ -101,7 +102,8 @@ public class GUI extends JFrame {
 
                 ModuleListeners.save.setUsername(user);
 
-                JOptionPane.showMessageDialog(null, "Please be patient, logging in may take some time...", "Status", JOptionPane.INFORMATION_MESSAGE);
+                header.setText("Loading...");
+                JOptionPane.showMessageDialog(null, "Please be patient, logging in may take some time...\nPress OK to continue.", "Status", JOptionPane.INFORMATION_MESSAGE);
                 Likom.getInstance().setInstagram(Instagram4j.builder().username(user).password(pw).build());
                 Likom.getInstance().getInstagram().setup();
                 InstagramLoginResult result;
@@ -114,6 +116,7 @@ public class GUI extends JFrame {
                     System.out.println("fail");
                     username.setText("Username");
                     password.setText("Password");
+                    header.setText("Sign in to Instagram below");
                     JOptionPane.showMessageDialog(null, result.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 } else
                     displayMain();

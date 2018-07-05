@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 /**
  * Class containing GUIs and handlers for all modules.
@@ -38,7 +39,6 @@ public class ModuleListeners {
 //            frame.setFont(FontUtil.getFont(App.class.getClassLoader().getResourceAsStream("./myriadfont.ttf"), 18));
             frame.setFont(new JLabel().getFont().deriveFont(18f));
             frame.setSize(new Dimension(200, 300));
-            frame.setLocation(540, 540);
             frame.setUndecorated(true);
             frame.setResizable(false);
             frame.getRootPane().setWindowDecorationStyle(JRootPane.FRAME);
@@ -62,6 +62,14 @@ public class ModuleListeners {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     if (startStop.getText().equals("Start")) {
+                        if (save.getHashtags().size() == 0) {
+                            JOptionPane.showMessageDialog(frame, "You haven't set any Hashtags to search for posts in.", "Error", JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
+                        if (save.getComments().size() == 0) {
+                            JOptionPane.showMessageDialog(frame, "You haven't set any comments to comment on posts with.", "Error", JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
 
                         isStarted = true;
                         sts.setBorder(BorderFactory.createLineBorder(Color.GREEN, 20));
@@ -204,9 +212,61 @@ public class ModuleListeners {
             frame.setResizable(false);
             frame.getRootPane().setWindowDecorationStyle(JRootPane.FRAME);
 
-            JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 30));
+            JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 30));
+            panel.setBorder(BorderFactory.createEmptyBorder(30, 3, 20, 3));
             panel.setBackground(new Color(20, 139, 251));
 
+            JButton lowerDown = new JButton();
+            lowerDown.setFont(frame.getFont().deriveFont(18f));
+            lowerDown.setText("▼");
+            lowerDown.setPreferredSize(new Dimension(30, 20));
+            lowerDown.setBackground(Color.WHITE);
+            lowerDown.setFocusPainted(false);
+            lowerDown.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+
+            JLabel lowerLabel = new JLabel();
+            lowerLabel.setText("Minimum");
+            lowerLabel.setForeground(Color.WHITE);
+            lowerLabel.setFont(frame.getFont().deriveFont(17f));
+            lowerLabel.setPreferredSize(new Dimension(70, 40));
+
+            JButton lowerUp = new JButton();
+            lowerUp.setFont(frame.getFont().deriveFont(18f));
+            lowerUp.setText("▲");
+            lowerUp.setPreferredSize(new Dimension(30, 20));
+            lowerUp.setBackground(Color.WHITE);
+            lowerUp.setFocusPainted(false);
+            lowerUp.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+
+            JButton upperDown = new JButton();
+            upperDown.setFont(frame.getFont().deriveFont(18f));
+            upperDown.setText("▼");
+            upperDown.setPreferredSize(new Dimension(30, 20));
+            upperDown.setBackground(Color.WHITE);
+            upperDown.setFocusPainted(false);
+            upperDown.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+
+            JLabel upperLabel = new JLabel();
+            upperLabel.setText("Maximum");
+            upperLabel.setForeground(Color.WHITE);
+            upperLabel.setFont(frame.getFont().deriveFont(17f));
+            upperLabel.setPreferredSize(new Dimension(70, 40));
+
+            JButton upperUp = new JButton();
+            upperUp.setFont(frame.getFont().deriveFont(18f));
+            upperUp.setText("▲");
+            upperUp.setPreferredSize(new Dimension(30, 20));
+            upperUp.setBackground(Color.WHITE);
+            upperUp.setFocusPainted(false);
+            upperUp.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+
+            panel.add(lowerDown);
+            panel.add(lowerLabel);
+            panel.add(lowerUp);
+
+            panel.add(upperDown);
+            panel.add(upperLabel);
+            panel.add(upperUp);
 
             frame.add(panel);
 
@@ -284,14 +344,15 @@ public class ModuleListeners {
             open.setFocusPainted(false);
             open.setText("Open File");
             open.setPreferredSize(new Dimension(80, 50));
-            open.setFont(frame.getFont().deriveFont(12f));
+            open.setFont(frame.getFont().deriveFont(14f));
             open.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
             open.addActionListener(e12 -> {
-                File commentsFile = null;
+                File commentsFile;
                 try {
                     commentsFile = new File(new File(App.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile() + File.separator + "comments.txt");
-                } catch (URISyntaxException e1) {
-                    e1.printStackTrace();
+                } catch (URISyntaxException ex) {
+                    ex.printStackTrace();
+                    return;
                 }
                 if (!commentsFile.exists()) {
                     try {
@@ -313,8 +374,6 @@ public class ModuleListeners {
                     ex.printStackTrace();
                     return;
                 }
-
-                //todo open file
             });
 
             JButton load = new JButton();
@@ -326,7 +385,24 @@ public class ModuleListeners {
             load.setFont(frame.getFont().deriveFont(20f));
             load.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
             load.addActionListener(e1 -> {
-                //todo like load the file maybe?
+                File commentsFile;
+                try {
+                    commentsFile = new File(new File(App.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile() + File.separator + "comments.txt");
+                } catch (URISyntaxException ex) {
+                    ex.printStackTrace();
+                    return;
+                }
+                try {
+                    if (!commentsFile.exists())
+                        commentsFile.createNewFile();
+                    List<String> comments = new ArrayList<>();
+                    Scanner scanner = new Scanner(commentsFile);
+                    while (scanner.hasNext())
+                        comments.add(scanner.next());
+                    save.setComments(comments);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
             });
 
             panel.add(open);

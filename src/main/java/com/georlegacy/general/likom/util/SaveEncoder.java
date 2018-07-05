@@ -10,7 +10,6 @@ import java.net.URL;
 public class SaveEncoder {
 
     public static void save(LikomSave save) {
-        System.out.println("saving");
         URL url = Likom.class.getProtectionDomain().getCodeSource().getLocation();
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File(new File(url.toURI()).getParentFile() + File.separator + "save.lk")))) {
             File file = new File(new File(url.toURI()).getParentFile() + File.separator + "save.lk");

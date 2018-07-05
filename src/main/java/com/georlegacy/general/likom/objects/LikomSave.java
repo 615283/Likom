@@ -18,12 +18,15 @@ public class LikomSave implements Serializable {
 
     private String username;
 
+    private List<String> comments;
+
     /**
      * Contructor
      */
     public LikomSave() {
         this.hashtags = new ArrayList<String>();
         this.username = "Username";
+        this.comments = new ArrayList<String>();
     }
 
     /**
@@ -55,8 +58,8 @@ public class LikomSave implements Serializable {
         return username;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public List<String> getComments() {
+        return comments;
     }
 
     /**
@@ -81,6 +84,15 @@ public class LikomSave implements Serializable {
      */
     public void setHashtags(List<String> hashtags) {
         this.hashtags = hashtags;
+    }
+
+    //TODO docs
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setComments(List<String> comments) {
+        this.comments = comments;
     }
 
 }

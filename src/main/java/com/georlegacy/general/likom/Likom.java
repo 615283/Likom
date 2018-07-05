@@ -5,10 +5,14 @@ import org.brunocvcunha.instagram4j.Instagram4j;
 
 import java.awt.*;
 import java.net.URISyntaxException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 public class Likom {
 
     private GUI gui;
+
+    private ScheduledExecutorService scheduler;
 
     private Instagram4j instagram;
 
@@ -16,6 +20,10 @@ public class Likom {
 
     public void setInstagram(Instagram4j instagram) {
         this.instagram = instagram;
+    }
+
+    public ScheduledExecutorService getScheduler() {
+        return scheduler;
     }
 
     public Instagram4j getInstagram() {
@@ -28,6 +36,7 @@ public class Likom {
 
     public Likom() {
         instance = this;
+        scheduler = Executors.newScheduledThreadPool(1);
         try {
             gui = new GUI();
         } catch (URISyntaxException e) {
