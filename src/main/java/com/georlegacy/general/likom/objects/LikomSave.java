@@ -53,11 +53,18 @@ public class LikomSave implements Serializable {
         return intervalUpperBoundMillis;
     }
 
-    //TODO docs
+    /**
+     * Gets the stored username to put in the username field for logon.
+     * @return {@link String} containing username
+     */
     public String getUsername() {
         return username;
     }
 
+    /**
+     * Gets the list of comments loaded from the comments.txt file.
+     * @return {@link List} of Strings containing comments
+     */
     public List<String> getComments() {
         return comments;
     }
@@ -86,11 +93,18 @@ public class LikomSave implements Serializable {
         this.hashtags = hashtags;
     }
 
-    //TODO docs
+    /**
+     * Sets the username to be remembered for next login.
+     * @param username The new username
+     */
     public void setUsername(String username) {
         this.username = username;
     }
 
+    /**
+     * Sets the stored comments to be randomly picked from.
+     * @param comments The new list of comments
+     */
     public void setComments(List<String> comments) {
         this.comments = comments;
     }
