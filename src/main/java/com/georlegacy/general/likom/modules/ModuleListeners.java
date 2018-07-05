@@ -212,7 +212,7 @@ public class ModuleListeners {
             frame.setResizable(false);
             frame.getRootPane().setWindowDecorationStyle(JRootPane.FRAME);
 
-            JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 30));
+            JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 8, 30));
             panel.setBorder(BorderFactory.createEmptyBorder(30, 3, 20, 3));
             panel.setBackground(new Color(20, 139, 251));
 
@@ -228,7 +228,7 @@ public class ModuleListeners {
             lowerLabel.setText("Minimum");
             lowerLabel.setForeground(Color.WHITE);
             lowerLabel.setFont(frame.getFont().deriveFont(17f));
-            lowerLabel.setPreferredSize(new Dimension(70, 40));
+            lowerLabel.setPreferredSize(new Dimension(80, 40));
 
             JButton lowerUp = new JButton();
             lowerUp.setFont(frame.getFont().deriveFont(18f));
@@ -250,7 +250,7 @@ public class ModuleListeners {
             upperLabel.setText("Maximum");
             upperLabel.setForeground(Color.WHITE);
             upperLabel.setFont(frame.getFont().deriveFont(17f));
-            upperLabel.setPreferredSize(new Dimension(70, 40));
+            upperLabel.setPreferredSize(new Dimension(80, 40));
 
             JButton upperUp = new JButton();
             upperUp.setFont(frame.getFont().deriveFont(18f));
