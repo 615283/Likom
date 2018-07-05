@@ -8,6 +8,9 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -281,9 +284,36 @@ public class ModuleListeners {
             open.setFocusPainted(false);
             open.setText("Open File");
             open.setPreferredSize(new Dimension(80, 50));
-            open.setFont(frame.getFont().deriveFont(20f));
+            open.setFont(frame.getFont().deriveFont(12f));
             open.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
             open.addActionListener(e12 -> {
+                File commentsFile = null;
+                try {
+                    commentsFile = new File(new File(App.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile() + File.separator + "comments.txt");
+                } catch (URISyntaxException e1) {
+                    e1.printStackTrace();
+                }
+                if (!commentsFile.exists()) {
+                    try {
+                        commentsFile.createNewFile();
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                        return;
+                    }
+                }
+                try {
+                    Desktop.getDesktop().edit(commentsFile);
+                } catch (UnsupportedOperationException ex) {
+                    JOptionPane.showMessageDialog(frame, "Editing the comments file is unsupported, try opening manually.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                } catch (SecurityException ex) {
+                    JOptionPane.showMessageDialog(frame, "The program does not have permission to open the comments file, try opening manually.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                    return;
+                }
+
                 //todo open file
             });
 
