@@ -1,7 +1,7 @@
 package com.georlegacy.general.likom.modules;
 
 import com.georlegacy.general.likom.App;
-import com.georlegacy.general.likom.util.FontUtil;
+import com.georlegacy.general.likom.objects.LikomSave;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -11,10 +11,18 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class containing GUIs and handlers for all modules.
+ *
+ * @author 615283
+ */
 public class ModuleListeners {
+
+    public static LikomSave save;
 
     public static class System implements ActionListener {
         private boolean isOpen;
+        private boolean isStarted;
 
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -24,7 +32,8 @@ public class ModuleListeners {
             }
 
             JFrame frame = new JFrame();
-            frame.setFont(FontUtil.getFont(App.class.getClassLoader().getResourceAsStream("myriadfont.ttf"), 18));
+//            frame.setFont(FontUtil.getFont(App.class.getClassLoader().getResourceAsStream("./myriadfont.ttf"), 18));
+            frame.setFont(new JLabel().getFont().deriveFont(18f));
             frame.setSize(new Dimension(200, 300));
             frame.setLocation(540, 540);
             frame.setUndecorated(true);
@@ -36,12 +45,13 @@ public class ModuleListeners {
 
             JLabel sts = new JLabel();
             sts.setPreferredSize(new Dimension(70, 40));
-            sts.setBorder(BorderFactory.createLineBorder(Color.RED, 20));
+            sts.setBorder(BorderFactory.createLineBorder(isStarted ? Color.GREEN : Color.RED, 20));
 
             JButton startStop = new JButton();
             startStop.setFont(frame.getFont().deriveFont(18f));
-            startStop.setPreferredSize(new Dimension(70, 40));
-            startStop.setText("Start");
+            startStop.setPreferredSize(new Dimension(80, 40));
+            startStop.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+            startStop.setText(isStarted ? "Stop" : "Start");
             startStop.setFocusPainted(false);
             startStop.setForeground(Color.BLACK);
             startStop.setBackground(Color.WHITE);
@@ -50,12 +60,14 @@ public class ModuleListeners {
                 public void actionPerformed(ActionEvent e) {
                     if (startStop.getText().equals("Start")) {
 
+                        isStarted = true;
                         sts.setBorder(BorderFactory.createLineBorder(Color.GREEN, 20));
                         startStop.setText("Stop");
                         return;
                     }
                     if (startStop.getText().equals("Stop")) {
 
+                        isStarted = false;
                         sts.setBorder(BorderFactory.createLineBorder(Color.RED, 20));
                         startStop.setText("Start");
                         return;
@@ -65,7 +77,6 @@ public class ModuleListeners {
 
             panel.add(startStop);
             panel.add(sts);
-
 
             frame.add(panel);
 
@@ -94,14 +105,14 @@ public class ModuleListeners {
             }
 
             JFrame frame = new JFrame();
-            frame.setFont(FontUtil.getFont(App.class.getClassLoader().getResourceAsStream("myriadfont.ttf"), 18));
+            frame.setFont(new JLabel().getFont().deriveFont(18f));
+            frame.setFont(frame.getFont().deriveFont(18f));
             frame.setSize(new Dimension(200, 300));
-            frame.setLocation(540, 540);
             frame.setUndecorated(true);
             frame.setResizable(false);
             frame.getRootPane().setWindowDecorationStyle(JRootPane.FRAME);
 
-            List<String> tags = new ArrayList<String>();
+            List<String> tags = save.getHashtags();
 
             JTextField enter = new JTextField();
             enter.setPreferredSize(new Dimension(170, 30));
@@ -117,17 +128,23 @@ public class ModuleListeners {
                     if (ar.getText().equals("Remove")) {
                         tags.remove(tagList.getSelectedValue());
                         tagList.setListData(tags.toArray());
+                        save.setHashtags(tags);
                         ar.setText("Add");
                         return;
                     }
                     if (ar.getText().equals("Add")) {
                         if (tags.contains(enter.getText())) {
-                            JOptionPane.showMessageDialog(null, "That Hashtag is already registered.", "Error", JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog(frame, "That Hashtag is already registered.", "Error", JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
+                        if (enter.getText().contains(" ")) {
+                            JOptionPane.showMessageDialog(frame, "Hashtags cannot contain spaces.", "Error", JOptionPane.ERROR_MESSAGE);
                             return;
                         }
                         tags.add(enter.getText());
                         enter.setText("");
                         tagList.setListData(tags.toArray());
+                        save.setHashtags(tags);
                         return;
                     }
                 }
@@ -135,6 +152,7 @@ public class ModuleListeners {
 
             tagList = new JList();
             tagList.setListData(tags.toArray());
+            save.setHashtags(tags);
             tagList.setPreferredSize(new Dimension(150, 150));
             tagList.addListSelectionListener(new ListSelectionListener() {
                 @Override
@@ -176,9 +194,9 @@ public class ModuleListeners {
             }
 
             JFrame frame = new JFrame();
-            frame.setFont(FontUtil.getFont(App.class.getClassLoader().getResourceAsStream("myriadfont.ttf"), 18));
+//            frame.setFont(FontUtil.getFont(App.class.getClassLoader().getResourceAsStream("./myriadfont.ttf"), 18));
+            frame.setFont(new JLabel().getFont().deriveFont(18f));
             frame.setSize(new Dimension(200, 300));
-            frame.setLocation(540, 540);
             frame.setUndecorated(true);
             frame.setResizable(false);
             frame.getRootPane().setWindowDecorationStyle(JRootPane.FRAME);
@@ -211,9 +229,9 @@ public class ModuleListeners {
             }
 
             JFrame frame = new JFrame();
-            frame.setFont(FontUtil.getFont(App.class.getClassLoader().getResourceAsStream("myriadfont.ttf"), 18));
+//            frame.setFont(FontUtil.getFont(App.class.getClassLoader().getResourceAsStream("./myriadfont.ttf"), 18));
+            frame.setFont(new JLabel().getFont().deriveFont(18f));
             frame.setSize(new Dimension(200, 300));
-            frame.setLocation(540, 540);
             frame.setUndecorated(true);
             frame.setResizable(false);
             frame.getRootPane().setWindowDecorationStyle(JRootPane.FRAME);
@@ -247,16 +265,42 @@ public class ModuleListeners {
             }
 
             JFrame frame = new JFrame();
-            frame.setFont(FontUtil.getFont(App.class.getClassLoader().getResourceAsStream("myriadfont.ttf"), 18));
+//            frame.setFont(FontUtil.getFont(App.class.getClassLoader().getResourceAsStream("./myriadfont.ttf"), 18));
+            frame.setFont(new JLabel().getFont().deriveFont(18f));
             frame.setSize(new Dimension(200, 300));
-            frame.setLocation(540, 540);
             frame.setUndecorated(true);
             frame.setResizable(false);
             frame.getRootPane().setWindowDecorationStyle(JRootPane.FRAME);
 
-            JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 30));
+            JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 30));
             panel.setBackground(new Color(20, 139, 251));
 
+            JButton open = new JButton();
+            open.setForeground(Color.BLACK);
+            open.setBackground(Color.WHITE);
+            open.setFocusPainted(false);
+            open.setText("Open File");
+            open.setPreferredSize(new Dimension(80, 50));
+            open.setFont(frame.getFont().deriveFont(20f));
+            open.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+            open.addActionListener(e12 -> {
+                //todo open file
+            });
+
+            JButton load = new JButton();
+            load.setForeground(Color.BLACK);
+            load.setBackground(Color.WHITE);
+            load.setFocusPainted(false);
+            load.setText("Reload");
+            load.setPreferredSize(new Dimension(80, 50));
+            load.setFont(frame.getFont().deriveFont(20f));
+            load.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+            load.addActionListener(e1 -> {
+                //todo like load the file maybe?
+            });
+
+            panel.add(open);
+            panel.add(load);
 
             frame.add(panel);
 

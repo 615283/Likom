@@ -1,7 +1,9 @@
 package com.georlegacy.general.likom;
 
+import com.georlegacy.general.likom.modules.ModuleListeners;
 import com.georlegacy.general.likom.modules.base.ModuleHandler;
-import com.georlegacy.general.likom.util.FontUtil;
+import com.georlegacy.general.likom.util.SaveEncoder;
+import javafx.scene.text.Font;
 import org.brunocvcunha.instagram4j.Instagram4j;
 import org.brunocvcunha.instagram4j.requests.payload.InstagramLoginResult;
 
@@ -11,6 +13,8 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
@@ -19,14 +23,16 @@ public class GUI extends JFrame {
     JPanel main;
 
     public GUI() throws URISyntaxException {
+        ModuleListeners.save = SaveEncoder.decode();
         this.setResizable(false);
         this.setSize(new Dimension(800, 600));
-        this.setFont(FontUtil.getFont(App.class.getClassLoader().getResourceAsStream("myriadfont.ttf"), 24));
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLayout(new FlowLayout());
         this.setTitle("Likom - Instagram Comment and Like Utility");
         try {
             this.setIconImage(ImageIO.read(Likom.class.getClassLoader().getResourceAsStream("icon.png")));
+//            this.setFont(FontUtil.getFont(App.class.getClassLoader().getResourceAsStream("./myriadfont.ttf"), 24));
+            this.setFont(new JLabel().getFont().deriveFont(24f));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -35,6 +41,12 @@ public class GUI extends JFrame {
         main.setBorder(BorderFactory.createEmptyBorder(50, 75, 50, 75));
         main.setBackground(new Color(20, 139, 251));
         this.add(main);
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                SaveEncoder.save(ModuleListeners.save);
+            }
+        });
     }
 
     public void displayOnly(String text, Color color) {
@@ -48,7 +60,8 @@ public class GUI extends JFrame {
         label.setPreferredSize(new Dimension(600, 400));
 
         panel.add(label);
-        main.setFont(FontUtil.getFont(App.class.getClassLoader().getResourceAsStream("myriadfont.ttf"), 52));
+//        main.setFont(FontUtil.getFont(App.class.getClassLoader().getResourceAsStream("./myriadfont.ttf"), 52));
+        this.setFont(new JLabel().getFont().deriveFont(52f));
         main.add(panel, BorderLayout.CENTER);
         this.setVisible(true);
     }
@@ -57,15 +70,15 @@ public class GUI extends JFrame {
         Border padding = BorderFactory.createEmptyBorder(15, 25, 30, 25);
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 15));
         panel.setBackground(new Color(119, 196, 251));
-        panel.setPreferredSize(new Dimension(300, 300));
+        panel.setPreferredSize(new Dimension(320, 300));
         panel.setBorder(padding);
 
         JLabel header = new JLabel("Sign in to Instagram below", SwingConstants.CENTER);
         header.setFont(this.getFont());
-        header.setBorder(BorderFactory.createEmptyBorder(10,0,15,0));
+        header.setBorder(BorderFactory.createEmptyBorder(10, 0, 15, 0));
 
         JTextField username = new JTextField();
-        username.setText("Username");
+        username.setText(ModuleListeners.save.getUsername());
         username.setPreferredSize(new Dimension(175, 30));
         username.setFont(this.getFont().deriveFont(16f));
 
@@ -79,12 +92,14 @@ public class GUI extends JFrame {
         login.setForeground(Color.BLACK);
         login.setFont(this.getFont().deriveFont(24f));
         login.setPreferredSize(new Dimension(100, 40));
-        login.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+        login.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         login.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 final String user = username.getText();
                 final String pw = password.getText();
+
+                ModuleListeners.save.setUsername(user);
 
                 JOptionPane.showMessageDialog(null, "Please be patient, logging in may take some time...", "Status", JOptionPane.INFORMATION_MESSAGE);
                 Likom.getInstance().setInstagram(Instagram4j.builder().username(user).password(pw).build());
@@ -120,7 +135,7 @@ public class GUI extends JFrame {
 
         JPanel modules = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 32));
         modules.setPreferredSize(new Dimension(300, 500));
-        modules.setBorder(BorderFactory.createEmptyBorder(40,20,40,20));
+        modules.setBorder(BorderFactory.createEmptyBorder(40, 20, 40, 20));
         modules.setBackground(new Color(20, 139, 251));
 
         ModuleHandler handler = new ModuleHandler();
