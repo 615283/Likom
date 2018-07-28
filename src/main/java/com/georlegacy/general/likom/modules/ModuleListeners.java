@@ -1,7 +1,9 @@
 package com.georlegacy.general.likom.modules;
 
 import com.georlegacy.general.likom.App;
+import com.georlegacy.general.likom.Likom;
 import com.georlegacy.general.likom.objects.LikomSave;
+import com.georlegacy.general.likom.tasks.PostInteractTask;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -14,6 +16,8 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Class containing GUIs and handlers for all modules.
@@ -27,6 +31,8 @@ public class ModuleListeners {
     public static class System implements ActionListener {
         private boolean isOpen;
         private boolean isStarted;
+
+        private PostInteractTask task;
 
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -71,6 +77,9 @@ public class ModuleListeners {
                             return;
                         }
 
+                        task = new PostInteractTask();
+                        Likom.getInstance().getScheduler().scheduleWithFixedDelay(task, 1L, 1L, TimeUnit.MILLISECONDS);
+                        task.stopped = false;
                         isStarted = true;
                         sts.setBorder(BorderFactory.createLineBorder(Color.GREEN, 20));
                         startStop.setText("Stop");
@@ -78,6 +87,7 @@ public class ModuleListeners {
                     }
                     if (startStop.getText().equals("Stop")) {
 
+                        task.stopped = true;
                         isStarted = false;
                         sts.setBorder(BorderFactory.createLineBorder(Color.RED, 20));
                         startStop.setText("Start");

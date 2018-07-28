@@ -110,6 +110,7 @@ public class GUI extends JFrame {
                 try {
                     result = Likom.getInstance().getInstagram().login();
                 } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(null, "Error occurred logging in. :/", "Error", JOptionPane.ERROR_MESSAGE);
                     throw new RuntimeException(ex);
                 }
                 if (result.getStatus().equalsIgnoreCase("fail")) {
